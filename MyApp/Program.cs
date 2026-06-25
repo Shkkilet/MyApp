@@ -150,3 +150,27 @@ all.UnionWith(hash2);
 Console.WriteLine("All unique students:");
 foreach (var s in all)
     Console.WriteLine(s);
+
+//Завдання 5
+Console.WriteLine("Task 5");
+
+int a = 5;
+int b = 10;
+
+Generics.Swap(ref a, ref b);
+
+Console.WriteLine($"{a} {b} \n");
+
+
+//Завдання 6
+Console.WriteLine("Task 6");
+
+
+var stack = new MyStack<int>();
+
+stack.Push(10);
+stack.Push(20);
+
+Console.WriteLine(stack.Peek());
+Console.WriteLine(stack.Pop());
+Console.WriteLine(stack.Pop());
