@@ -174,3 +174,46 @@ stack.Push(20);
 Console.WriteLine(stack.Peek());
 Console.WriteLine(stack.Pop());
 Console.WriteLine(stack.Pop());
+
+////Завдання 7
+///
+var students = new List<Student>
+{
+    new("Олег",  85),
+    new("Юля",   92),
+    new("Влад",  78),
+    new("Аня",   92),
+    new("Петро", 65),
+};
+
+var more80 = students.Where(v => v.Grade > 80);
+var ordered = students.OrderByDescending(o => o.Grade).Select(o => o.Name);
+var serednie = students.Average(s => s.Grade);
+var highest = students.OrderBy(s => s.Grade).Last(); // or students.MaxBy(s => s.Grade); or students.OrderByDescending(s => s.Grade).First();
+var grouped = students.OrderByDescending(s => s.Grade).GroupBy(s => s.Grade).ToDictionary(g => g.Key, g => g.Select(x => x.Name).ToList());
+Console.WriteLine(highest);
+
+foreach (var student in ordered)
+{
+    //Console.WriteLine($"{student.Name}: {student.Grade}");
+    Console.WriteLine(student);
+
+}
+foreach (var group in grouped)
+{
+    Console.WriteLine($"{group.Key}: {string.Join(", ", group.Value)}");
+}
+Console.WriteLine();
+
+
+////Завдання 8
+var numbers = new List<int> { 1, 2, 3, 4, 5 };
+var query = numbers.Where(x => x > 2).ToList();
+numbers.Add(6);
+numbers.Add(7);
+foreach (var n in query)
+    Console.WriteLine(n);
+
+
+record Student(string Name, int Grade);
+
