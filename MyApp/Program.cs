@@ -244,3 +244,30 @@ var products = ProductMapper.ToDtoList(rawProducts);
 var orders = OrderMapper.ToDtoList(rawOrders);
 
 
+var availableProd = products.Where(p => p.IsAvailable).OrderBy(p => p.Price);
+Console.WriteLine("Available Products:");
+foreach (var pr in availableProd)
+    Console.WriteLine(pr.Name + ": " + pr.Price);
+
+var productsElectronics = products.Where(e => e.Category == "Electronics" && e.Price < 500);
+Console.WriteLine("\nElectronics Products under $500:");
+foreach (var pr in productsElectronics)
+    Console.WriteLine(pr.Name + ": " + pr.Price);
+
+var categoryAvg = products.GroupBy(a => a.Category).ToDictionary(p => p.Key, p => p.Average(x => x.Price));
+
+Console.WriteLine("\nAverage Prices by Category:");
+foreach (var kvp in categoryAvg)
+    Console.WriteLine($"{kvp.Key}: ${kvp.Value:F2}");
+
+var expenciveInCategory = products.GroupBy(e => e.Category).ToDictionary(g => g.Key, g => g.MaxBy(e => e.Price));
+
+Console.WriteLine("\nMost Expensive Product in Each Category:");
+foreach (var pr in expenciveInCategory)
+    Console.WriteLine($"{pr.Key}: {pr.Value!.Name} - ${pr.Value.Price}");
+
+Console.WriteLine("\nUnAvailable Products:");
+
+var unave = products.Where(u => !u.IsAvailable);
+foreach (var pr in unave)
+    Console.WriteLine(pr.Name + ": " + pr.Price);
