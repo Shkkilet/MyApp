@@ -1,4 +1,5 @@
 ﻿using MyApp.Core;
+using MyApp.Core.DTOs;
 using MyApp.Core.Entities;
 using MyApp.Core.Mapper;
 using System.Text.RegularExpressions;
@@ -271,3 +272,26 @@ Console.WriteLine("\nUnAvailable Products:");
 var unave = products.Where(u => !u.IsAvailable);
 foreach (var pr in unave)
     Console.WriteLine(pr.Name + ": " + pr.Price);
+
+
+//orders
+
+var shiip = orders.Where(s => s.Status == OrderStatus.Shipped).OrderBy(s => s.CreatedAt);
+Console.WriteLine("\nShipped Orders:");
+foreach (var o in shiip)
+    Console.WriteLine($"Order ID: {o.OrderId}, Customer: {o.CustomerName}, Created At: {o.CreatedAt}");
+
+var byStatys = orders.GroupBy(b => b.Status).ToDictionary(g => g.Key, g => g.Count());
+Console.WriteLine("\nOrders by Status:");
+foreach (var o in byStatys)
+    Console.WriteLine($"{o.Key}: {o.Value}");
+
+var id1 = orders.Where(i => i.ProductIds.Contains(1));
+Console.WriteLine("\nWhere Ids 1:");
+foreach (var o in id1)
+    Console.WriteLine($"Order ID: {o.OrderId}, Customer: {o.CustomerName}, Created At: {o.CreatedAt}");
+
+var cancelled = orders.Where(c => c.Status == OrderStatus.Cancelled).Select(c => c.CustomerId);
+Console.WriteLine("\nCancelled Orders:");
+foreach (var o in cancelled)
+    Console.WriteLine($"Customer id: {o}");
