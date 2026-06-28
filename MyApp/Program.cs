@@ -2,6 +2,8 @@
 using MyApp.Core.DTOs;
 using MyApp.Core.Entities;
 using MyApp.Core.Mapper;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 //var catalog = new ProductCatalog();
@@ -295,3 +297,33 @@ var cancelled = orders.Where(c => c.Status == OrderStatus.Cancelled).Select(c =>
 Console.WriteLine("\nCancelled Orders:");
 foreach (var o in cancelled)
     Console.WriteLine($"Customer id: {o}");
+
+
+//4 task
+
+//4a
+
+var first = orders.Where(o => o.Status == OrderStatus.Shipped)
+    .Select(o => new
+    {
+        o.CustomerName,
+        Total = o.ProductIds
+      .Join(products, id => id, p => p.Id, (id, p) => p.Price).Sum()
+    });
+Console.WriteLine("\nShipped and Sum:");
+foreach (var o in first)
+    Console.WriteLine($"{o.CustomerName}: ${o.Total}");
+
+//4b
+
+var second = orders
+    .GroupBy(o => o.CustomerName ).Where(g => g.All(g => g.Status != OrderStatus.Cancelled));
+Console.WriteLine("\nClients who not canselled orders:");
+foreach (var o in second)
+    Console.WriteLine(o.Key);
+
+//4c
+
+// Select бере потрібні нам значення які ми записали в умові і робить з них колекцію, тобто якщо ми беремо масив з нашого класу , 
+//то Select створить колекцію із масивів,
+// а SelectMany розбере ці всі масиви і зробить з них одну колекцію, з елементів які міситили ці масиви
