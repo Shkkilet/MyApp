@@ -2,9 +2,11 @@
 using MyApp.Core.DTOs;
 using MyApp.Core.Entities;
 using MyApp.Core.Mapper;
+using MyApp.Core.Services;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using static MyApp.Core.Services.DiscountStrategy;
 
 //var catalog = new ProductCatalog();
 //Console.WriteLine("""
@@ -327,3 +329,26 @@ foreach (var o in second)
 // Select бере потрібні нам значення які ми записали в умові і робить з них колекцію, тобто якщо ми беремо масив з нашого класу , 
 //то Select створить колекцію із масивів,
 // а SelectMany розбере ці всі масиви і зробить з них одну колекцію, з елементів які міситили ці масиви
+
+
+
+Console.WriteLine("\n\n\nBlock 6 ");
+
+IDiscountStrategy noDiscount = new DiscountStrategy.NoDiscount();
+
+IDiscountStrategy percDiscount = new DiscountStrategy.PercentageDiscount(20);
+
+IDiscountStrategy amountDiscount = new DiscountStrategy.FixedAmountDiscount(400);
+
+
+Console.WriteLine(noDiscount.Description);
+Console.WriteLine(percDiscount.Description);
+Console.WriteLine(amountDiscount.Description);
+
+decimal price = noDiscount.ApplyDiscount(1000);
+decimal percPrice = percDiscount.ApplyDiscount(1000);
+decimal amountPrice = amountDiscount.ApplyDiscount(1000);
+
+Console.WriteLine(price);
+Console.WriteLine(percPrice);
+Console.WriteLine(amountPrice);
