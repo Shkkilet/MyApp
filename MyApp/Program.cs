@@ -352,3 +352,17 @@ decimal amountPrice = amountDiscount.ApplyDiscount(1000);
 Console.WriteLine(price);
 Console.WriteLine(percPrice);
 Console.WriteLine(amountPrice);
+
+
+List<IDiscountStrategy> discounts = new()
+{
+    new DiscountStrategy.NoDiscount(),
+    new DiscountStrategy.PercentageDiscount(30),
+    new DiscountStrategy.FixedAmountDiscount(130)
+};
+
+var product = products.First();
+    foreach (var discount in discounts)
+    {
+    DiscountStrategy.PriceCalculator.PrintReceipt(product, discount);
+    }
