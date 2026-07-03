@@ -2,9 +2,12 @@
 using MyApp.Core.DTOs;
 using MyApp.Core.Entities;
 using MyApp.Core.Mapper;
+using MyApp.Core.Services.DiscountStrategy;
+using MyApp.Core.Services.ShippingMethod.ShippingMethod;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
+using static MyApp.Core.Services.DiscountStrategy.DiscountStrategy;
 
 //var catalog = new ProductCatalog();
 //Console.WriteLine("""
@@ -327,3 +330,105 @@ foreach (var o in second)
 // Select бере потрібні нам значення які ми записали в умові і робить з них колекцію, тобто якщо ми беремо масив з нашого класу , 
 //то Select створить колекцію із масивів,
 // а SelectMany розбере ці всі масиви і зробить з них одну колекцію, з елементів які міситили ці масиви
+
+
+
+Console.WriteLine("\n\n\nBlock 6 ");
+
+IDiscountStrategy noDiscount = new DiscountStrategy.NoDiscount();
+
+IDiscountStrategy percDiscount = new DiscountStrategy.PercentageDiscount(20);
+
+IDiscountStrategy amountDiscount = new DiscountStrategy.FixedAmountDiscount(400);
+
+
+Console.WriteLine(noDiscount.Description);
+Console.WriteLine(percDiscount.Description);
+Console.WriteLine(amountDiscount.Description);
+
+decimal price = noDiscount.ApplyDiscount(1000);
+decimal percPrice = percDiscount.ApplyDiscount(1000);
+decimal amountPrice = amountDiscount.ApplyDiscount(1000);
+
+Console.WriteLine(price);
+Console.WriteLine(percPrice);
+Console.WriteLine(amountPrice);
+
+
+List<IDiscountStrategy> discounts = new()
+{
+    new DiscountStrategy.NoDiscount(),
+    new DiscountStrategy.PercentageDiscount(30),
+    new DiscountStrategy.FixedAmountDiscount(130)
+};
+
+var product = products.First();
+    foreach (var discount in discounts)
+    {
+    DiscountStrategy.PriceCalculator.PrintReceipt(product, discount);
+    }
+
+
+
+IShippingMethod shipping;
+decimal orderTotal = product.Price;
+if (orderTotal >= 100)
+{
+    shipping = new ShippingMethod.FreeShipping();
+}
+else
+{
+    shipping = new ShippingMethod.StandardShipping();
+}
+
+Console.WriteLine(shipping.Name);
+Console.WriteLine(shipping.Cost);
+Console.WriteLine(shipping.EstimatedDays);
+
+
+
+//task 4
+var ordersNew = new List<Order>
+{
+    new Order
+    {
+        Product = products[0],
+        Discount = new DiscountStrategy.NoDiscount(),
+        Shipping = new ShippingMethod.StandardShipping()
+    },
+
+    new Order
+    {
+        Product = products[1],
+        Discount = new DiscountStrategy.PercentageDiscount(20),
+        Shipping = new ShippingMethod.ExpressShipping()
+    },
+
+    new Order
+    {
+        Product = products[2],
+        Discount = new DiscountStrategy.FixedAmountDiscount(10),
+        Shipping = new ShippingMethod.StandardShipping()
+    },
+
+    new Order
+    {
+        Product = products[3],
+        Discount = new DiscountStrategy.PercentageDiscount(10),
+        Shipping = new ShippingMethod.FreeShipping()
+    }
+};
+var mostExpensive = ordersNew
+    .OrderByDescending(x => x.GetTotal())
+    .First();
+Console.WriteLine("task 4");
+Console.WriteLine(mostExpensive.Product.Name);
+Console.WriteLine(mostExpensive.GetTotal());
+Console.WriteLine(mostExpensive.Discount.Description);
+Console.WriteLine(mostExpensive.Shipping.Name);
+
+
+// При додаванні нонвого способу доставки потрібно додати новий клас , який реалізує інтерфейс. 
+// Якщо була б реалізація через enum й swith , то потрібно було б міняти уже працюючий код .
+// І це порушує Open/Closed Principle, при другому варіанті ми це правило порушуємо , бо міняємо існуючий код 
+// при першому варіанті ми дотримуємомся цього правила і не міняємо нічого, а просто додаєємо ноавау реалізію інтерфейсу
