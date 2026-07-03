@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyApp.Core.Services
+namespace MyApp.Core.Services.DiscountStrategy
 {
     public interface IDiscountStrategy
     {

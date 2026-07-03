@@ -2,11 +2,12 @@
 using MyApp.Core.DTOs;
 using MyApp.Core.Entities;
 using MyApp.Core.Mapper;
-using MyApp.Core.Services;
+using MyApp.Core.Services.DiscountStrategy;
+using MyApp.Core.Services.ShippingMethod.ShippingMethod;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using static MyApp.Core.Services.DiscountStrategy;
+using static MyApp.Core.Services.DiscountStrategy.DiscountStrategy;
 
 //var catalog = new ProductCatalog();
 //Console.WriteLine("""
@@ -366,3 +367,20 @@ var product = products.First();
     {
     DiscountStrategy.PriceCalculator.PrintReceipt(product, discount);
     }
+
+
+
+IShippingMethod shipping;
+decimal orderTotal = product.Price;
+if (orderTotal >= 100)
+{
+    shipping = new ShippingMethod.FreeShipping();
+}
+else
+{
+    shipping = new ShippingMethod.StandardShipping();
+}
+
+Console.WriteLine(shipping.Name);
+Console.WriteLine(shipping.Cost);
+Console.WriteLine(shipping.EstimatedDays);
