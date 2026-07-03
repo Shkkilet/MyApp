@@ -384,3 +384,51 @@ else
 Console.WriteLine(shipping.Name);
 Console.WriteLine(shipping.Cost);
 Console.WriteLine(shipping.EstimatedDays);
+
+
+
+//task 4
+var ordersNew = new List<Order>
+{
+    new Order
+    {
+        Product = products[0],
+        Discount = new DiscountStrategy.NoDiscount(),
+        Shipping = new ShippingMethod.StandardShipping()
+    },
+
+    new Order
+    {
+        Product = products[1],
+        Discount = new DiscountStrategy.PercentageDiscount(20),
+        Shipping = new ShippingMethod.ExpressShipping()
+    },
+
+    new Order
+    {
+        Product = products[2],
+        Discount = new DiscountStrategy.FixedAmountDiscount(10),
+        Shipping = new ShippingMethod.StandardShipping()
+    },
+
+    new Order
+    {
+        Product = products[3],
+        Discount = new DiscountStrategy.PercentageDiscount(10),
+        Shipping = new ShippingMethod.FreeShipping()
+    }
+};
+var mostExpensive = ordersNew
+    .OrderByDescending(x => x.GetTotal())
+    .First();
+Console.WriteLine("task 4");
+Console.WriteLine(mostExpensive.Product.Name);
+Console.WriteLine(mostExpensive.GetTotal());
+Console.WriteLine(mostExpensive.Discount.Description);
+Console.WriteLine(mostExpensive.Shipping.Name);
+
+
+// При додаванні нонвого способу доставки потрібно додати новий клас , який реалізує інтерфейс. 
+// Якщо була б реалізація через enum й swith , то потрібно було б міняти уже працюючий код .
+// І це порушує Open/Closed Principle, при другому варіанті ми це правило порушуємо , бо міняємо існуючий код 
+// при першому варіанті ми дотримуємомся цього правила і не міняємо нічого, а просто додаєємо ноавау реалізію інтерфейсу
