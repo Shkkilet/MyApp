@@ -432,3 +432,54 @@ Console.WriteLine(mostExpensive.Shipping.Name);
 // Якщо була б реалізація через enum й swith , то потрібно було б міняти уже працюючий код .
 // І це порушує Open/Closed Principle, при другому варіанті ми це правило порушуємо , бо міняємо існуючий код 
 // при першому варіанті ми дотримуємомся цього правила і не міняємо нічого, а просто додаєємо ноавау реалізію інтерфейсу
+
+
+
+// record — використовується для незмінних даних бронювання, які порівнюються за значенням.
+public record BookingRequest
+{
+    public Guid RoomId { get; init; }
+    public DateOnly CheckIn { get; init; }
+    public DateOnly CheckOut { get; init; }
+    public int GuestsCount { get; init; }
+    public BookingRequest(Guid roomId, DateOnly checkIn, DateOnly checkOut, int guestsCount)
+    {
+        if (checkOut <= checkIn)
+            throw new ArgumentException("CheckOut must be later than CheckIn.");
+
+        if (guestsCount <= 0)
+            throw new ArgumentException("GuestsCount can not be less then 0.");
+
+        RoomId = roomId;
+        CheckIn = checkIn;
+        CheckOut = checkOut;
+        GuestsCount = guestsCount;
+    }
+}
+// struct —маленький значеннєвий тип, який часто створюється і копіюється.
+public readonly struct Money
+{
+    public decimal Amount { get; }
+    public string Currency { get; }
+    public Money(decimal amount, string currency)
+    {
+        if (amount < 0) throw new ArgumentException("Amount can't be negative");
+        Amount = amount;
+        Currency = currency;
+    }
+    public Money Add(Money other)
+    {
+        if (Currency != other.Currency) throw new InvalidOperationException("Currency mismatch");
+        return new Money(Amount + other.Amount, Currency);
+    }
+}
+// class — має власну ідентичність і може змінювати стан протягом життєвого циклу
+public class Booking
+{
+    public Guid Id { get; init; }
+    public BookingRequest Request { get; init; } = null!;
+    public BookingStatus Status { get; private set; } = BookingStatus.Pending;
+    public void Confirm() => Status = BookingStatus.Confirmed;
+    public void Cancel() => Status = BookingStatus.Cancelled;
+}
+public enum BookingStatus { Pending, Confirmed, Cancelled }
