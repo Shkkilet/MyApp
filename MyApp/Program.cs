@@ -577,3 +577,29 @@ public class Booking
 }
 public enum BookingStatus { Pending, Confirmed, Cancelled }
 
+
+
+////task 3
+public abstract class NotificationBase
+{
+    public abstract void Send(string message);
+    protected string FormatMessage(string message) => $"[Booking] {message}";
+}
+public interface INotificationChannel
+{
+    void Send(string message);
+}
+public class EmailNotification : NotificationBase, INotificationChannel
+{
+    public override void Send(string message)
+    {
+        Console.WriteLine($"Email: {FormatMessage(message)}");
+    }
+}
+public class SmsNotification : NotificationBase, INotificationChannel
+{
+    public override void Send(string message)
+    {
+        Console.WriteLine($"SMS: {FormatMessage(message)}");
+    }
+}
