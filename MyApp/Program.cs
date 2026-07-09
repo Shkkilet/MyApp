@@ -603,3 +603,67 @@ public class SmsNotification : NotificationBase, INotificationChannel
         Console.WriteLine($"SMS: {FormatMessage(message)}");
     }
 }
+
+
+//task 4
+public class BookingValidator
+{
+    public void Validate(BookingRequest request)
+    {
+        if (request.CheckOut <= request.CheckIn)
+            throw new ArgumentException("Invalid dates");
+
+        if (request.GuestsCount <= 0)
+            throw new ArgumentException("Invalid guests count");
+    }
+}
+public class BookingRepository
+{
+    private readonly List<Booking> _bookings = [];
+
+    public void Save(Booking booking)
+    {
+        _bookings.Add(booking);
+    }
+
+    public IEnumerable<Booking> GetAll()
+    {
+        return _bookings;
+    }
+}
+public class BookingService
+{
+    private readonly BookingValidator validator;
+    private readonly IRoomPricingStrategy pricingStrategy;
+    private readonly BookingRepository repository;
+    private readonly INotificationChannel notification;
+
+    public BookingService(
+        BookingValidator validator,
+        IRoomPricingStrategy pricingStrategy,
+        BookingRepository repository,
+        INotificationChannel notification)
+    {
+        this.validator = validator;
+        this.pricingStrategy = pricingStrategy;
+        this.repository = repository;
+        this.notification = notification;
+    }
+
+    public void CreateBooking(BookingRequest request)
+    {
+        validator.Validate(request);
+
+        Money price = pricingStrategy.CalculatePrice(request);
+
+        Booking booking = new Booking
+        {
+            Id = Guid.NewGuid(),
+            Request = request
+        };
+
+        repository.Save(booking);
+
+        notification.Send($"Booking confirmed. Total: {price.Amount} {price.Currency}");
+    }
+}
