@@ -225,207 +225,207 @@ using static MyApp.Core.Services.DiscountStrategy.DiscountStrategy;
 
 //record Student(string Name, int Grade);
 
-var rawProducts = new List<RawProduct>
-{
-    new() { Id = 1,  Name = "Laptop",      CategoryName = "Electronics", PriceUsd = 999.99, StockCount = 5,  IsActive = true  },
-    new() { Id = 2,  Name = "Phone",       CategoryName = "Electronics", PriceUsd = 499.99, StockCount = 12, IsActive = true  },
-    new() { Id = 3,  Name = "Headphones",  CategoryName = "Electronics", PriceUsd = 79.99,  StockCount = 0,  IsActive = true  },
-    new() { Id = 4,  Name = "T-Shirt",     CategoryName = "Clothing",    PriceUsd = 19.99,  StockCount = 50, IsActive = true  },
-    new() { Id = 5,  Name = "Jeans",       CategoryName = "Clothing",    PriceUsd = 49.99,  StockCount = 30, IsActive = false },
-    new() { Id = 6,  Name = "Coffee Maker",CategoryName = "Kitchen",     PriceUsd = 89.99,  StockCount = 8,  IsActive = true  },
-    new() { Id = 7,  Name = "Blender",     CategoryName = "Kitchen",     PriceUsd = 39.99,  StockCount = 0,  IsActive = true  },
-    new() { Id = 8,  Name = "Desk Lamp",   CategoryName = "Office",      PriceUsd = 24.99,  StockCount = 20, IsActive = true  },
-};
+//var rawProducts = new List<RawProduct>
+//{
+//    new() { Id = 1,  Name = "Laptop",      CategoryName = "Electronics", PriceUsd = 999.99, StockCount = 5,  IsActive = true  },
+//    new() { Id = 2,  Name = "Phone",       CategoryName = "Electronics", PriceUsd = 499.99, StockCount = 12, IsActive = true  },
+//    new() { Id = 3,  Name = "Headphones",  CategoryName = "Electronics", PriceUsd = 79.99,  StockCount = 0,  IsActive = true  },
+//    new() { Id = 4,  Name = "T-Shirt",     CategoryName = "Clothing",    PriceUsd = 19.99,  StockCount = 50, IsActive = true  },
+//    new() { Id = 5,  Name = "Jeans",       CategoryName = "Clothing",    PriceUsd = 49.99,  StockCount = 30, IsActive = false },
+//    new() { Id = 6,  Name = "Coffee Maker",CategoryName = "Kitchen",     PriceUsd = 89.99,  StockCount = 8,  IsActive = true  },
+//    new() { Id = 7,  Name = "Blender",     CategoryName = "Kitchen",     PriceUsd = 39.99,  StockCount = 0,  IsActive = true  },
+//    new() { Id = 8,  Name = "Desk Lamp",   CategoryName = "Office",      PriceUsd = 24.99,  StockCount = 20, IsActive = true  },
+//};
 
-var rawOrders = new List<RawOrder>
-{
-    new() { OrderId = 101, CustomerId = 1, CustomerName = "Alice",   ProductIds = new() { 1, 3 },    Status = "shipped",   CreatedAt = new DateTime(2024, 1, 10) },
-    new() { OrderId = 102, CustomerId = 2, CustomerName = "Bob",     ProductIds = new() { 2, 4, 6 }, Status = "pending",   CreatedAt = new DateTime(2024, 2, 5)  },
-    new() { OrderId = 103, CustomerId = 1, CustomerName = "Alice",   ProductIds = new() { 5 },       Status = "cancelled", CreatedAt = new DateTime(2024, 2, 20) },
-    new() { OrderId = 104, CustomerId = 3, CustomerName = "Charlie", ProductIds = new() { 1, 2 },    Status = "shipped",   CreatedAt = new DateTime(2024, 3, 1)  },
-    new() { OrderId = 105, CustomerId = 2, CustomerName = "Bob",     ProductIds = new() { 8 },       Status = "pending",   CreatedAt = new DateTime(2024, 3, 15) },
-};
+//var rawOrders = new List<RawOrder>
+//{
+//    new() { OrderId = 101, CustomerId = 1, CustomerName = "Alice",   ProductIds = new() { 1, 3 },    Status = "shipped",   CreatedAt = new DateTime(2024, 1, 10) },
+//    new() { OrderId = 102, CustomerId = 2, CustomerName = "Bob",     ProductIds = new() { 2, 4, 6 }, Status = "pending",   CreatedAt = new DateTime(2024, 2, 5)  },
+//    new() { OrderId = 103, CustomerId = 1, CustomerName = "Alice",   ProductIds = new() { 5 },       Status = "cancelled", CreatedAt = new DateTime(2024, 2, 20) },
+//    new() { OrderId = 104, CustomerId = 3, CustomerName = "Charlie", ProductIds = new() { 1, 2 },    Status = "shipped",   CreatedAt = new DateTime(2024, 3, 1)  },
+//    new() { OrderId = 105, CustomerId = 2, CustomerName = "Bob",     ProductIds = new() { 8 },       Status = "pending",   CreatedAt = new DateTime(2024, 3, 15) },
+//};
 
-var products = ProductMapper.ToDtoList(rawProducts);
-var orders = OrderMapper.ToDtoList(rawOrders);
-
-
-var availableProd = products.Where(p => p.IsAvailable).OrderBy(p => p.Price);
-Console.WriteLine("Available Products:");
-foreach (var pr in availableProd)
-    Console.WriteLine(pr.Name + ": " + pr.Price);
-
-var productsElectronics = products.Where(e => e.Category == "Electronics" && e.Price < 500);
-Console.WriteLine("\nElectronics Products under $500:");
-foreach (var pr in productsElectronics)
-    Console.WriteLine(pr.Name + ": " + pr.Price);
-
-var categoryAvg = products.GroupBy(a => a.Category).ToDictionary(p => p.Key, p => p.Average(x => x.Price));
-
-Console.WriteLine("\nAverage Prices by Category:");
-foreach (var kvp in categoryAvg)
-    Console.WriteLine($"{kvp.Key}: ${kvp.Value:F2}");
-
-var expenciveInCategory = products.GroupBy(e => e.Category).ToDictionary(g => g.Key, g => g.MaxBy(e => e.Price));
-
-Console.WriteLine("\nMost Expensive Product in Each Category:");
-foreach (var pr in expenciveInCategory)
-    Console.WriteLine($"{pr.Key}: {pr.Value!.Name} - ${pr.Value.Price}");
-
-Console.WriteLine("\nUnAvailable Products:");
-
-var unave = products.Where(u => !u.IsAvailable);
-foreach (var pr in unave)
-    Console.WriteLine(pr.Name + ": " + pr.Price);
+//var products = ProductMapper.ToDtoList(rawProducts);
+//var orders = OrderMapper.ToDtoList(rawOrders);
 
 
-//orders
+//var availableProd = products.Where(p => p.IsAvailable).OrderBy(p => p.Price);
+//Console.WriteLine("Available Products:");
+//foreach (var pr in availableProd)
+//    Console.WriteLine(pr.Name + ": " + pr.Price);
 
-var shiip = orders.Where(s => s.Status == OrderStatus.Shipped).OrderBy(s => s.CreatedAt);
-Console.WriteLine("\nShipped Orders:");
-foreach (var o in shiip)
-    Console.WriteLine($"Order ID: {o.OrderId}, Customer: {o.CustomerName}, Created At: {o.CreatedAt}");
+//var productsElectronics = products.Where(e => e.Category == "Electronics" && e.Price < 500);
+//Console.WriteLine("\nElectronics Products under $500:");
+//foreach (var pr in productsElectronics)
+//    Console.WriteLine(pr.Name + ": " + pr.Price);
 
-var byStatys = orders.GroupBy(b => b.Status).ToDictionary(g => g.Key, g => g.Count());
-Console.WriteLine("\nOrders by Status:");
-foreach (var o in byStatys)
-    Console.WriteLine($"{o.Key}: {o.Value}");
+//var categoryAvg = products.GroupBy(a => a.Category).ToDictionary(p => p.Key, p => p.Average(x => x.Price));
 
-var id1 = orders.Where(i => i.ProductIds.Contains(1));
-Console.WriteLine("\nWhere Ids 1:");
-foreach (var o in id1)
-    Console.WriteLine($"Order ID: {o.OrderId}, Customer: {o.CustomerName}, Created At: {o.CreatedAt}");
+//Console.WriteLine("\nAverage Prices by Category:");
+//foreach (var kvp in categoryAvg)
+//    Console.WriteLine($"{kvp.Key}: ${kvp.Value:F2}");
 
-var cancelled = orders.Where(c => c.Status == OrderStatus.Cancelled).Select(c => c.CustomerId);
-Console.WriteLine("\nCancelled Orders:");
-foreach (var o in cancelled)
-    Console.WriteLine($"Customer id: {o}");
+//var expenciveInCategory = products.GroupBy(e => e.Category).ToDictionary(g => g.Key, g => g.MaxBy(e => e.Price));
 
+//Console.WriteLine("\nMost Expensive Product in Each Category:");
+//foreach (var pr in expenciveInCategory)
+//    Console.WriteLine($"{pr.Key}: {pr.Value!.Name} - ${pr.Value.Price}");
 
-//4 task
+//Console.WriteLine("\nUnAvailable Products:");
 
-//4a
-
-var first = orders.Where(o => o.Status == OrderStatus.Shipped)
-    .Select(o => new
-    {
-        o.CustomerName,
-        Total = o.ProductIds
-      .Join(products, id => id, p => p.Id, (id, p) => p.Price).Sum()
-    });
-Console.WriteLine("\nShipped and Sum:");
-foreach (var o in first)
-    Console.WriteLine($"{o.CustomerName}: ${o.Total}");
-
-//4b
-
-var second = orders
-    .GroupBy(o => o.CustomerName ).Where(g => g.All(g => g.Status != OrderStatus.Cancelled));
-Console.WriteLine("\nClients who not canselled orders:");
-foreach (var o in second)
-    Console.WriteLine(o.Key);
-
-//4c
-
-// Select бере потрібні нам значення які ми записали в умові і робить з них колекцію, тобто якщо ми беремо масив з нашого класу , 
-//то Select створить колекцію із масивів,
-// а SelectMany розбере ці всі масиви і зробить з них одну колекцію, з елементів які міситили ці масиви
+//var unave = products.Where(u => !u.IsAvailable);
+//foreach (var pr in unave)
+//    Console.WriteLine(pr.Name + ": " + pr.Price);
 
 
+////orders
 
-Console.WriteLine("\n\n\nBlock 6 ");
+//var shiip = orders.Where(s => s.Status == OrderStatus.Shipped).OrderBy(s => s.CreatedAt);
+//Console.WriteLine("\nShipped Orders:");
+//foreach (var o in shiip)
+//    Console.WriteLine($"Order ID: {o.OrderId}, Customer: {o.CustomerName}, Created At: {o.CreatedAt}");
 
-IDiscountStrategy noDiscount = new DiscountStrategy.NoDiscount();
+//var byStatys = orders.GroupBy(b => b.Status).ToDictionary(g => g.Key, g => g.Count());
+//Console.WriteLine("\nOrders by Status:");
+//foreach (var o in byStatys)
+//    Console.WriteLine($"{o.Key}: {o.Value}");
 
-IDiscountStrategy percDiscount = new DiscountStrategy.PercentageDiscount(20);
+//var id1 = orders.Where(i => i.ProductIds.Contains(1));
+//Console.WriteLine("\nWhere Ids 1:");
+//foreach (var o in id1)
+//    Console.WriteLine($"Order ID: {o.OrderId}, Customer: {o.CustomerName}, Created At: {o.CreatedAt}");
 
-IDiscountStrategy amountDiscount = new DiscountStrategy.FixedAmountDiscount(400);
-
-
-Console.WriteLine(noDiscount.Description);
-Console.WriteLine(percDiscount.Description);
-Console.WriteLine(amountDiscount.Description);
-
-decimal price = noDiscount.ApplyDiscount(1000);
-decimal percPrice = percDiscount.ApplyDiscount(1000);
-decimal amountPrice = amountDiscount.ApplyDiscount(1000);
-
-Console.WriteLine(price);
-Console.WriteLine(percPrice);
-Console.WriteLine(amountPrice);
+//var cancelled = orders.Where(c => c.Status == OrderStatus.Cancelled).Select(c => c.CustomerId);
+//Console.WriteLine("\nCancelled Orders:");
+//foreach (var o in cancelled)
+//    Console.WriteLine($"Customer id: {o}");
 
 
-List<IDiscountStrategy> discounts = new()
-{
-    new DiscountStrategy.NoDiscount(),
-    new DiscountStrategy.PercentageDiscount(30),
-    new DiscountStrategy.FixedAmountDiscount(130)
-};
+////4 task
 
-var product = products.First();
-    foreach (var discount in discounts)
-    {
-    DiscountStrategy.PriceCalculator.PrintReceipt(product, discount);
-    }
+////4a
+
+//var first = orders.Where(o => o.Status == OrderStatus.Shipped)
+//    .Select(o => new
+//    {
+//        o.CustomerName,
+//        Total = o.ProductIds
+//      .Join(products, id => id, p => p.Id, (id, p) => p.Price).Sum()
+//    });
+//Console.WriteLine("\nShipped and Sum:");
+//foreach (var o in first)
+//    Console.WriteLine($"{o.CustomerName}: ${o.Total}");
+
+////4b
+
+//var second = orders
+//    .GroupBy(o => o.CustomerName ).Where(g => g.All(g => g.Status != OrderStatus.Cancelled));
+//Console.WriteLine("\nClients who not canselled orders:");
+//foreach (var o in second)
+//    Console.WriteLine(o.Key);
+
+////4c
+
+//// Select бере потрібні нам значення які ми записали в умові і робить з них колекцію, тобто якщо ми беремо масив з нашого класу , 
+////то Select створить колекцію із масивів,
+//// а SelectMany розбере ці всі масиви і зробить з них одну колекцію, з елементів які міситили ці масиви
 
 
 
-IShippingMethod shipping;
-decimal orderTotal = product.Price;
-if (orderTotal >= 100)
-{
-    shipping = new ShippingMethod.FreeShipping();
-}
-else
-{
-    shipping = new ShippingMethod.StandardShipping();
-}
+//Console.WriteLine("\n\n\nBlock 6 ");
 
-Console.WriteLine(shipping.Name);
-Console.WriteLine(shipping.Cost);
-Console.WriteLine(shipping.EstimatedDays);
+//IDiscountStrategy noDiscount = new DiscountStrategy.NoDiscount();
+
+//IDiscountStrategy percDiscount = new DiscountStrategy.PercentageDiscount(20);
+
+//IDiscountStrategy amountDiscount = new DiscountStrategy.FixedAmountDiscount(400);
 
 
+//Console.WriteLine(noDiscount.Description);
+//Console.WriteLine(percDiscount.Description);
+//Console.WriteLine(amountDiscount.Description);
 
-//task 4
-var ordersNew = new List<Order>
-{
-    new Order
-    {
-        Product = products[0],
-        Discount = new DiscountStrategy.NoDiscount(),
-        Shipping = new ShippingMethod.StandardShipping()
-    },
+//decimal price = noDiscount.ApplyDiscount(1000);
+//decimal percPrice = percDiscount.ApplyDiscount(1000);
+//decimal amountPrice = amountDiscount.ApplyDiscount(1000);
 
-    new Order
-    {
-        Product = products[1],
-        Discount = new DiscountStrategy.PercentageDiscount(20),
-        Shipping = new ShippingMethod.ExpressShipping()
-    },
+//Console.WriteLine(price);
+//Console.WriteLine(percPrice);
+//Console.WriteLine(amountPrice);
 
-    new Order
-    {
-        Product = products[2],
-        Discount = new DiscountStrategy.FixedAmountDiscount(10),
-        Shipping = new ShippingMethod.StandardShipping()
-    },
 
-    new Order
-    {
-        Product = products[3],
-        Discount = new DiscountStrategy.PercentageDiscount(10),
-        Shipping = new ShippingMethod.FreeShipping()
-    }
-};
-var mostExpensive = ordersNew
-    .OrderByDescending(x => x.GetTotal())
-    .First();
-Console.WriteLine("task 4");
-Console.WriteLine(mostExpensive.Product.Name);
-Console.WriteLine(mostExpensive.GetTotal());
-Console.WriteLine(mostExpensive.Discount.Description);
-Console.WriteLine(mostExpensive.Shipping.Name);
+//List<IDiscountStrategy> discounts = new()
+//{
+//    new DiscountStrategy.NoDiscount(),
+//    new DiscountStrategy.PercentageDiscount(30),
+//    new DiscountStrategy.FixedAmountDiscount(130)
+//};
+
+//var product = products.First();
+//    foreach (var discount in discounts)
+//    {
+//    DiscountStrategy.PriceCalculator.PrintReceipt(product, discount);
+//    }
+
+
+
+//IShippingMethod shipping;
+//decimal orderTotal = product.Price;
+//if (orderTotal >= 100)
+//{
+//    shipping = new ShippingMethod.FreeShipping();
+//}
+//else
+//{
+//    shipping = new ShippingMethod.StandardShipping();
+//}
+
+//Console.WriteLine(shipping.Name);
+//Console.WriteLine(shipping.Cost);
+//Console.WriteLine(shipping.EstimatedDays);
+
+
+
+////task 4
+//var ordersNew = new List<Order>
+//{
+//    new Order
+//    {
+//        Product = products[0],
+//        Discount = new DiscountStrategy.NoDiscount(),
+//        Shipping = new ShippingMethod.StandardShipping()
+//    },
+
+//    new Order
+//    {
+//        Product = products[1],
+//        Discount = new DiscountStrategy.PercentageDiscount(20),
+//        Shipping = new ShippingMethod.ExpressShipping()
+//    },
+
+//    new Order
+//    {
+//        Product = products[2],
+//        Discount = new DiscountStrategy.FixedAmountDiscount(10),
+//        Shipping = new ShippingMethod.StandardShipping()
+//    },
+
+//    new Order
+//    {
+//        Product = products[3],
+//        Discount = new DiscountStrategy.PercentageDiscount(10),
+//        Shipping = new ShippingMethod.FreeShipping()
+//    }
+//};
+//var mostExpensive = ordersNew
+//    .OrderByDescending(x => x.GetTotal())
+//    .First();
+//Console.WriteLine("task 4");
+//Console.WriteLine(mostExpensive.Product.Name);
+//Console.WriteLine(mostExpensive.GetTotal());
+//Console.WriteLine(mostExpensive.Discount.Description);
+//Console.WriteLine(mostExpensive.Shipping.Name);
 
 
 // При додаванні нонвого способу доставки потрібно додати новий клас , який реалізує інтерфейс. 
@@ -433,6 +433,99 @@ Console.WriteLine(mostExpensive.Shipping.Name);
 // І це порушує Open/Closed Principle, при другому варіанті ми це правило порушуємо , бо міняємо існуючий код 
 // при першому варіанті ми дотримуємомся цього правила і не міняємо нічого, а просто додаєємо ноавау реалізію інтерфейсу
 
+
+
+//task 2
+
+
+BookingRequest request = new BookingRequest(
+    Guid.NewGuid(),
+    new DateOnly(2026, 7, 10),
+    new DateOnly(2026, 7, 15),
+    2);
+
+List<IRoomPricingStrategy> strategies =
+[
+    new StandardPricing(),
+    new WeekendSurchargePricing(),
+    new LongStayDiscountPricing()
+];
+
+foreach (var strategy in strategies)
+{
+    Money price = PriceCalculator.CalculatePrice(request, strategy);
+
+    Console.WriteLine($"{strategy.StrategyName}: {price.Amount} {price.Currency}");
+}
+
+public interface IRoomPricingStrategy
+{
+    Money CalculatePrice(BookingRequest request);
+    string StrategyName { get; }
+}
+public class StandardPricing : IRoomPricingStrategy
+{
+    private const decimal PricePerNight = 100m;
+
+    public string StrategyName => "Standard";
+
+    public Money CalculatePrice(BookingRequest request)
+    {
+        int nights = request.CheckOut.DayNumber - request.CheckIn.DayNumber;
+
+        return new Money(nights * PricePerNight, "USD");
+    }
+}
+public class WeekendSurchargePricing : IRoomPricingStrategy
+{
+    private const decimal PricePerNight = 100m;
+
+    public string StrategyName => "Weekend surcharge";
+
+    public Money CalculatePrice(BookingRequest request)
+    {
+        int nights = request.CheckOut.DayNumber - request.CheckIn.DayNumber;
+
+        decimal total = nights * PricePerNight;
+
+        if (request.CheckIn.DayOfWeek == DayOfWeek.Friday ||
+            request.CheckIn.DayOfWeek == DayOfWeek.Saturday)
+        {
+            total *= 1.2m;
+        }
+
+        return new Money(total, "USD");
+    }
+}
+public class LongStayDiscountPricing : IRoomPricingStrategy
+{
+    private const decimal PricePerNight = 100m;
+
+    public string StrategyName => "Long stay";
+
+    public Money CalculatePrice(BookingRequest request)
+    {
+        int nights = request.CheckOut.DayNumber - request.CheckIn.DayNumber;
+
+        decimal total = nights * PricePerNight;
+
+        if (nights >= 7)
+        {
+            total *= 0.9m;
+        }
+
+        return new Money(total, "USD");
+    }
+}
+public static class PriceCalculator
+{
+    public static Money CalculatePrice(
+        BookingRequest request,
+        IRoomPricingStrategy strategy)
+    {
+        return strategy.CalculatePrice(request);
+    }
+}
 
 
 // record — використовується для незмінних даних бронювання, які порівнюються за значенням.
@@ -483,3 +576,4 @@ public class Booking
     public void Cancel() => Status = BookingStatus.Cancelled;
 }
 public enum BookingStatus { Pending, Confirmed, Cancelled }
+
