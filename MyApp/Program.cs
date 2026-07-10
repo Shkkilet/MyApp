@@ -701,3 +701,36 @@ public class SuitePricing : IRoomPricingStrategy
         return new Money(total, "USD");
     }
 }
+//Task 6
+public interface IBookingCreation
+{
+    void Create(BookingRequest request);
+}
+
+public interface IBookingCancellation
+{
+    void Cancel(Guid bookingId);
+}
+
+public interface IInvoicing
+{
+    void GenerateInvoice(Guid bookingId);
+}
+
+public interface IReminders
+{
+    void SendReminder(Guid bookingId);
+}
+public class SimpleBookingBot
+    : IBookingCreation, IBookingCancellation
+{
+    public void Create(BookingRequest request)
+    {
+        Console.WriteLine("Booking created.");
+    }
+
+    public void Cancel(Guid bookingId)
+    {
+        Console.WriteLine("Booking cancelled.");
+    }
+}
