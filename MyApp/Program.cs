@@ -667,3 +667,37 @@ public class BookingService
         notification.Send($"Booking confirmed. Total: {price.Amount} {price.Currency}");
     }
 }
+//task 5
+public record SuiteBookingRequest : BookingRequest
+{
+    public bool HasButlerService { get; init; }
+
+    public SuiteBookingRequest(
+        Guid roomId,
+        DateOnly checkIn,
+        DateOnly checkOut,
+        int guestsCount,
+        bool hasButlerService)
+        : base(roomId, checkIn, checkOut, guestsCount)
+    {
+        HasButlerService = hasButlerService;
+    }
+}
+
+public class SuitePricing : IRoomPricingStrategy
+{
+    public string StrategyName => "Suite";
+
+    public Money CalculatePrice(BookingRequest request)
+    {
+        int nights = request.CheckOut.DayNumber - request.CheckIn.DayNumber;
+        decimal total = nights * 300m;
+        if (request is SuiteBookingRequest suite &&
+            suite.HasButlerService)
+        {
+            total += 150m;
+        }
+
+        return new Money(total, "USD");
+    }
+}
