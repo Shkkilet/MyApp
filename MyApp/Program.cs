@@ -437,26 +437,59 @@ using static MyApp.Core.Services.DiscountStrategy.DiscountStrategy;
 
 //task 2
 
+BookingRepository repository = new BookingRepository();
+BookingValidator validator = new BookingValidator();
+INotificationChannel notification = new EmailNotification();
 
-BookingRequest request = new BookingRequest(
-    Guid.NewGuid(),
-    new DateOnly(2026, 7, 10),
-    new DateOnly(2026, 7, 15),
-    2);
-
-List<IRoomPricingStrategy> strategies =
+List<(BookingRequest Request, IRoomPricingStrategy Strategy)> bookings =
 [
-    new StandardPricing(),
-    new WeekendSurchargePricing(),
-    new LongStayDiscountPricing()
+    (
+        new BookingRequest(
+            Guid.NewGuid(),
+            new DateOnly(2026, 7, 10),
+            new DateOnly(2026, 7, 15),
+            2),
+        new StandardPricing()
+    ),
+
+    (
+        new BookingRequest(
+            Guid.NewGuid(),
+            new DateOnly(2026, 7, 17),
+            new DateOnly(2026, 7, 20),
+            3),
+        new WeekendSurchargePricing()
+    ),
+
+    (
+        new BookingRequest(
+            Guid.NewGuid(),
+            new DateOnly(2026, 7, 1),
+            new DateOnly(2026, 7, 10),
+            1),
+        new LongStayDiscountPricing()
+    )
 ];
 
-foreach (var strategy in strategies)
+foreach (var item in bookings)
 {
-    Money price = PriceCalculator.CalculatePrice(request, strategy);
+    BookingService service = new BookingService(
+        validator,
+        item.Strategy,
+        repository,
+        notification);
 
-    Console.WriteLine($"{strategy.StrategyName}: {price.Amount} {price.Currency}");
+    service.CreateBooking(item.Request);
+
+    Money price = PriceCalculator.CalculatePrice(item.Request, item.Strategy);
+
+    Console.WriteLine($"Strategy: {item.Strategy.StrategyName}");
+    Console.WriteLine($"Guests: {item.Request.GuestsCount}");
+    Console.WriteLine($"Price: {price.Amount} {price.Currency}");
+    Console.WriteLine();
 }
+
+Console.WriteLine($"Total bookings saved: {repository.GetAll().Count()}");
 
 public interface IRoomPricingStrategy
 {
